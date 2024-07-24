@@ -16,10 +16,24 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   fullName  String
-  email     String
+  email     String   @unique
   phone     String?
   address   String?
   country   String?
+  coupons   Coupon[]
+  
   create_at DateTime @default(now())
   update_at DateTime @default(now())
+}
+
+model Coupon {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  discount    Float
+  expires_at  DateTime
+  userId      String
+  create_at   DateTime @default(now())  
+  update_at   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
 }
