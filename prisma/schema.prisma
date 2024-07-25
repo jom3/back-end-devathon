@@ -16,6 +16,7 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   fullName  String
+  role      UserRole @default(USER)
   email     String   @unique
   phone     String?
   address   String?
@@ -29,11 +30,25 @@ model User {
 model Coupon {
   id          String   @id @default(uuid())
   code        String   @unique
-  discount    Float
+  discount    Int
   expires_at  DateTime
   userId      String
   create_at   DateTime @default(now())  
   update_at   DateTime @default(now())
-
+  state       String   @default("active")
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model Movie {
+  id        Int     @id @default(autoincrement())
+  title     String
+  genre     String
+  available Boolean @default(true)
+}
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+  USER
+  VISITOR
 }
