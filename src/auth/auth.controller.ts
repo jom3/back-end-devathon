@@ -8,6 +8,7 @@ import { AuthGuard } from './guard/auth.guard';
 export class AuthController {
     constructor(private readonly authservice: AuthService){}
 
+    //Sign Up
     @Get('signup')
     signUp(@Req() req:Request, @Res() res:Response){
         try {
@@ -27,7 +28,7 @@ export class AuthController {
         })
     }
 
-
+    //Sign In
     @Get('signin')
     signIn(@Req() req:Request, @Res() res:Response){
         try {
@@ -47,20 +48,36 @@ export class AuthController {
         })
     }
 
+    //Logout
+    @Get("logout")
+    logout(@Req() req:Request, @Res() res:Response){
+        try {
+            res.clearCookie(process.env.authToken);
+            return res.status(201).json({
+                message: "Bye.!"
+            })
+        } catch (error) {
+            return res.status(404).json({
+                message: error.message
+            })
+        }
+    }
+
+    //Root just for test the Guards Logic
     // @Get('home')
     // @UseGuards(AuthGuard)
     // home(@Req() req: Request, @Res() res:Response){
-
     //     try {
-    //         console.log("Form home: " + req.query.userID);
     //         const userID = req.query.userID;
-
-    //         res.status(201).json({
+    //         return res.status(201).json({
     //             message: `${userID}`
     //         })
     //     } catch (error) {
-    //         console.log(error.message);
     //         throw new HttpException("Error Home", HttpStatus.BAD_REQUEST)
     //     }
     // }
 }
+
+    
+
+    

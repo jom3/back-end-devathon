@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request, Response, NextFunction } from 'express';
+import { comparePassword } from '../util/bcryptjs';
 
 @Injectable()
 export class LoginMiddleware implements NestMiddleware {
@@ -11,19 +12,31 @@ export class LoginMiddleware implements NestMiddleware {
 
     //Get email
     
-    const {email} = req.body;
+    const {email,password} = req.body;
 
     //Search Email into the database
-    const emailFound = await this.prisma.user.findUnique({
+    const userFound = await this.prisma.user.findUnique({
       where: {
         email: email,
       },
     });
 
     //User Found
-    if(emailFound){
+    if(!userFound){
       return res.status(404).json({
         message: "Wrong Email"
+      });
+    }
+
+    //Wrong Password 
+    //PasswordHashed
+    const passwordHashed = userFound.password;
+    //Compare Password
+    const passwor_IsCorrect = await comparePassword(password,passwordHashed);
+
+    if(!passwor_IsCorrect){
+      return res.status(404).json({
+        message: "Wrong Password"
       });
     }
 

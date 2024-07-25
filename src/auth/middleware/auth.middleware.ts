@@ -10,10 +10,9 @@ export class AuthMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
 
     //Get email
-    
     const {email, password, confirm_password } = req.body;
 
-    //Search Email into the database
+    //Searching Email into the database
     const emailFound = await this.prisma.user.findUnique({
       where: {
         email: email,
