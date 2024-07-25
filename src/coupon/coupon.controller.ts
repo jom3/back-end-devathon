@@ -14,21 +14,21 @@ export class CouponController {
 
   @Get()
   findAll() {
-    return this.couponService.findAll();
+    return this.couponService.getCoupons();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.couponService.findOne(+id);
+    return this.couponService.getCouponById(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
-    return this.couponService.update(+id, updateCouponDto);
+    return this.couponService.updateCoupon(id, updateCouponDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.couponService.remove(+id);
+    return this.couponService.deleteCoupon(id);
   }
 }

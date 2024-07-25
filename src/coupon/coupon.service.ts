@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CouponService {
-  create(createCouponDto: CreateCouponDto) {
-    return 'This action adds a new coupon';
+
+  constructor(private readonly prisma: PrismaService) {}
+  async create(data: CreateCouponDto) {
+    return this.prisma.coupon.create({
+      data,
+    });
   }
 
-  findAll() {
-    return `This action returns all coupon`;
+  async getCoupons() {
+    return this.prisma.coupon.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} coupon`;
+  async getCouponById(id: string) {
+    return this.prisma.coupon.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateCouponDto: UpdateCouponDto) {
-    return `This action updates a #${id} coupon`;
+  //async updateCoupon(id: string, data: Partial<{ code: string; discount: number; expires_at: Date }>) {
+  async updateCoupon(id: string, data: Partial<UpdateCouponDto>) {
+    return this.prisma.coupon.update({
+      where: { id },
+      data,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} coupon`;
+  async deleteCoupon(id: string) {
+    return this.prisma.coupon.delete({
+      where: { id },
+    });
   }
 }
