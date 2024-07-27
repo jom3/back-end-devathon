@@ -1,30 +1,47 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from '../util/constants';
-
+import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService:JwtService){}
+  constructor(
+    private jwtService: JwtService,
+    private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean>{
-
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    // console.log(request);
-    const token = request.cookies[process.env.authToken];
-    
-    if(!token){
-      throw new UnauthorizedException("Token not provided")
+
+    const token: string = request.headers.authorization;
+
+    if (!token) {
+      throw new UnauthorizedException('Not Authorized');
     }
 
-    try {
-      const { id } = await this.jwtService.verifyAsync(token,{secret: jwtConstants.secret});
- 
-      request.query.userID = id; 
+    const { id } = await this.jwtService.verifyAsync(token.split(' ')[1], {
+      secret: this.configService.get('jwtSecret'),
+    });
 
-    } catch (error) {
-      throw new UnauthorizedException("Incorrect Token")
-    }
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    request['user'] = user;
+
     return true;
   }
 }

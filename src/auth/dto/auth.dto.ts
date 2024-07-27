@@ -1,23 +1,33 @@
-import { Transform } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
-import { IsStrongPassword } from "../util/password.validator";
+import { Transform } from 'class-transformer';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
-    @IsString()
-    @MinLength(6)
-    @MaxLength(20)
-    @IsNotEmpty()
-    @Transform(({value}) => value.trim())
-    fullName: string;
-    
-    @IsEmail()
-    email: string;
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  @IsNotEmpty()
+  @Transform(({ value }) => value.trim().toLowerCase())
+  fullName: string;
 
-    @IsStrongPassword()
-    password: string;
+  @IsEmail()
+  email: string;
 
-    @IsString()
-    @MinLength(8)
-    @Transform(({value}) => value.trim())
-    confirm_password: string;
+  @IsString()
+  @MinLength(8)
+  @MaxLength(20)
+  @Matches(
+    /^(?=(?:.*[0-9]){1})(?=(?:.*[a-z]){1})(?=(?:.*[A-Z]){1})(?=(?:.*[@$!%*?&.]){1})[A-Za-z0-9@$!%*?&.]{8,}$/,
+    {
+      message:
+        'Password must contain min 8 character at least 1 uppercase, 1 lowercase, 1 number and 1 special character (@$!%*?&.)',
+    },
+  )
+  password: string;
 }
