@@ -3,16 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  Req,
-  Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto, LoginDto } from './dto';
 import { comparePassword, encryptPassword } from './util/bcryptjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { Request, Response } from 'express';
-import { User } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
@@ -33,7 +29,7 @@ export class AuthService {
       });
 
       //Creating Token
-      const payload = { id: userCreated.id };
+      const payload = { id: userCreated.id, role: userCreated.role };
 
       const token = await this.jwtService.signAsync(payload);
 
@@ -52,7 +48,7 @@ export class AuthService {
   }
 
   async login({ email, password }: LoginDto) {
-    let user: { id: string; password: string };
+    let user: { id: string; password: string, role: string };
 
     try {
       //Searching user
@@ -63,6 +59,7 @@ export class AuthService {
         select: {
           id: true,
           password: true,
+          role: true
         },
       });
     } catch (error) {
@@ -80,7 +77,7 @@ export class AuthService {
     }
 
     //Creating Token
-    const payload = { id: user.id };
+    const payload = { id: user.id, role: user.role };
 
     const token = await this.jwtService.signAsync(payload);
 

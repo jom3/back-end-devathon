@@ -14,7 +14,13 @@ model User {
   phone     String?
   address   String?
   country   String?
+  role      Role     @default(USER)
   create_at DateTime @default(now())
   update_at DateTime @default(now())
   password  String
+}
+
+enum Role {
+  USER
+  ADMIN
 }
