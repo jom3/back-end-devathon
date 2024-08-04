@@ -4,11 +4,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto, LoginDto } from './dto';
+import { LoginDto } from './dto';
 import { comparePassword, encryptPassword } from './util/bcryptjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,8 @@ export class AuthService {
       const token = await this.jwtService.signAsync(payload);
 
       return {
-        token,
+        userCreated,
+        token
       };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
