@@ -4,7 +4,6 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from 'src/user/user.module';
-import { UserService } from 'src/user/user.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
@@ -17,7 +16,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get('jwtSecret'),
-          signOptions: { expiresIn: '1d' },
+          signOptions: { expiresIn: '1h' },
         };
       },
     }),
