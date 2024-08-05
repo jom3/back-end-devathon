@@ -36,8 +36,8 @@ model Coupon {
   type        String   @default("percent")
   expires_at  DateTime
   used        Boolean  @default(false)
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id])
   create_at   DateTime @default(now())  
   update_at   DateTime @default(now())
 }
