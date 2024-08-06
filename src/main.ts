@@ -10,9 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-   /* Prefix
+  app.enableCors();
+
+   //Prefix
      app.setGlobalPrefix('api');
-  */
+ 
 
   // validaciones de los DTOs.
   app.useGlobalPipes(
