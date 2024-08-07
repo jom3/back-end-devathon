@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsDate, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, Min } from "class-validator";
+import { IsDate, IsInt, IsNotEmpty, IsPositive, IsString, Min } from "class-validator";
 
 export class CreateCouponDto {
 
@@ -20,9 +20,19 @@ export class CreateCouponDto {
     })
     @IsInt()
     @Min(0)
-    //@IsPositive()
     @Type(() => Number)
     public discount: number;
+
+
+    @ApiProperty({ 
+        type: String,
+        description: 'Coupon type',
+        example: 'percent'
+    })
+    @IsString()
+    @Min(0)
+    @IsPositive()
+    public type: string;
 
 
     @ApiProperty({ 
@@ -30,16 +40,29 @@ export class CreateCouponDto {
         description: 'Coupon expiration date',
         example: '2022-01-01' 
     })
+    @Min(0)
+    @IsPositive()
     @IsDate()
     public expires_at: Date;
 
 
     @ApiProperty({ 
-        type: String,
+        type: Boolean,
         description: 'Coupon state',
-        example: 'active' 
+        example: true 
     })
     @IsString()
     @IsNotEmpty()
-    public state: string;
+    public used: boolean;
+
+
+    @ApiProperty({
+        type: String,
+        description: 'Id of the user who created the coupon',
+        example: '11111'
+    })
+    @IsString()
+    @IsNotEmpty()
+    public userId: string;
+
 }
