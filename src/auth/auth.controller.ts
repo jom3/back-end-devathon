@@ -6,7 +6,6 @@ import { signUpPostApi } from 'src/docs/auth-api/signUpPost.decorator';
 import { signInPostApi } from 'src/docs/auth-api/signInPost.decorator';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Authentication')
 @Controller('auth')
