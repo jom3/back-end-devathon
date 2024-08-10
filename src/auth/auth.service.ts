@@ -86,4 +86,16 @@ export class AuthService {
       token,
     };
   }
+
+  // Oauth2.0 ~ Google
+  async googleLogin(req: { user: any; }) {
+    if (!req.user) {
+      return 'No user from google'
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user
+    }  
+  }
 }
