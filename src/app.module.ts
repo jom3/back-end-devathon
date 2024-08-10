@@ -10,6 +10,7 @@ import { CouponService } from './coupon/coupon.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
+import { GoogleStrategy } from './auth/strategies/google.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { UserService } from './user/user.service';
     UserModule,
     CouponModule,
   ],
-  providers: [AppService, PrismaService, CouponService, AuthService, UserService],
+  providers: [AppService, PrismaService, CouponService, AuthService, UserService, GoogleStrategy],
 })
 export class AppModule {}

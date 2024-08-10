@@ -6,6 +6,7 @@ import { signUpPostApi } from 'src/docs/auth-api/signUpPost.decorator';
 import { signInPostApi } from 'src/docs/auth-api/signInPost.decorator';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
+import { GoogleOauthGuard } from './guard/google-oauth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -25,5 +26,17 @@ export class AuthController {
   @signInPostApi()
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Get('google')
+  //@UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleOauthGuard)
+  async googleAuth(@Req() req) {}
+
+  @Get('google/redirect')
+  //@UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleOauthGuard)
+  googleAuthRedirect(@Req() req) {
+    return this.authService.googleLogin(req)
   }
 }
