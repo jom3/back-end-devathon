@@ -1,4 +1,6 @@
 import {
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -119,13 +121,17 @@ export class AuthService {
 
   // Oauth2.0 ~ Google
   async googleLogin(req: { user: any; }) {
-    if (!req.user) {
-      return 'No user from google'
+    try {
+      if (!req.user) {
+        return 'No user from google'
+      }
+  
+      return {
+        message: 'User information from google',
+        user: req.user
+      }  
+    } catch (err) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
-
-    return {
-      message: 'User information from google',
-      user: req.user
-    }  
   }
 }
