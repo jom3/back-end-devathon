@@ -5,9 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from 'src/user/user.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { EmailService } from 'src/email/email.service';
 
 @Module({
-  providers: [AuthService],
+  providers: [AuthService, EmailService],
   controllers: [AuthController],
   imports: [
     JwtModule.registerAsync({

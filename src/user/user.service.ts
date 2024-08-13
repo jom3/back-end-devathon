@@ -5,17 +5,19 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { encryptPassword } from 'src/auth/util/bcryptjs';
 import { PaginationDto } from 'src/common/dtos';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class UserService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly emailService:EmailService,
   ) {}
 
   async createUser({ password, ...createUserDto }: CreateUserDto) {
-    const passwordHashed = encryptPassword(password);
+    const passwordHashed = await encryptPassword(password);
     try {
       const user = await this.prismaService.user.create({
         data: {
@@ -28,6 +30,9 @@ export class UserService {
       const payload = { id: user.id, role: user.role };
 
       const token = await this.jwtService.signAsync(payload);
+
+      //Send Email
+      await this.emailService.sendEmail_Welcome(user.email,user.fullName);
 
       return {
         status: 201,

@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
 import { GoogleStrategy } from './auth/strategies/google.strategy';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GoogleStrategy } from './auth/strategies/google.strategy';
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     UserModule,
     CouponModule,
+    EmailModule,
   ],
   providers: [AppService, PrismaService, CouponService, AuthService, UserService, GoogleStrategy],
 })
