@@ -17,7 +17,7 @@ export class UserService {
   ) {}
 
   async createUser({ password, ...createUserDto }: CreateUserDto) {
-    const passwordHashed = encryptPassword(password);
+    const passwordHashed = await encryptPassword(password);
     try {
       const user = await this.prismaService.user.create({
         data: {
