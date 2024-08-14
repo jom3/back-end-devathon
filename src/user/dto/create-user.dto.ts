@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { UserRole } from "./enum";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -32,6 +32,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsEmail()
   readonly email: string;
   
 
