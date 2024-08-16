@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { UserRole } from "./enum";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -9,7 +9,7 @@ export class CreateUserDto {
     example: '4445545',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly dni: string;
 
 
@@ -22,8 +22,36 @@ export class CreateUserDto {
   readonly fullName: string;
 
 
+  @ApiProperty({
+    description: 'user phone',
+    example: '555 -xxxxx-xxxx',
+  })
   @IsString()
+  @IsOptional()
+  readonly phone: string;
+
+
+  @ApiProperty({
+    description: 'user gender',
+    example: 'M - F - O - N',
+  })
+  @IsString()
+  @IsOptional()
+  readonly genre: string;
+
+
+  @IsString()
+  @IsOptional()
   readonly role: UserRole.USER;
+
+
+  @ApiProperty({
+    description: 'user country',
+    example: 'Colombia',
+  })
+  @IsString()
+  @IsOptional()
+  readonly country: string;
 
 
   @ApiProperty({
