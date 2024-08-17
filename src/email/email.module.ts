@@ -16,7 +16,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
           }
         },
         defaults: {
-          from: `No Replay: <${configService.get("nodemailer_email_from")}>`
+          from: `No Reply: <${configService.get("nodemailer_email_from")}>`
         }
       }),
       inject: [ConfigService]

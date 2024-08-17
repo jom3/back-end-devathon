@@ -32,16 +32,16 @@ export class EmailService {
     }
     }
 
-    async sendEmail_RecoveryPass(email: string, fullName: string, token: string) {
+    async sendEmail_RecoveryPass(email: string, fullName: string, userId: string) {
     try {
         let userName = nameTransform(fullName);
 
         let subjectString = `Hola ${userName}, Recuperación de Contraseña`;
-
-        const html = recoveryPassTemplate(userName, token);
-
+        
+        const html = recoveryPassTemplate(userName, userId);
+        
         await this.mailerService.sendMail({
-            from: "slowmoviessupport@gmail.com",
+            from: "< no-reply >: slowmoviessupport@gmail.com",
             to: email,
             subject: subjectString,
             html: html

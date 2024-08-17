@@ -16,4 +16,9 @@ export class PasswordDto {
     },
     )
     password: string;
+
+    @IsString()
+    @MinLength(8)
+    @MaxLength(20)
+    confirm_password
 }

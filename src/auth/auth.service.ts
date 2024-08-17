@@ -81,18 +81,16 @@ export class AuthService {
     }
 
     //Creating new Token
-    const payload = {id: user.id}
-    const token = await this.jwtService.signAsync(payload, {expiresIn: '5m'})
+    const id = user.id
     
     //Send Email: read .env.example to use it.
-    const response = await this.emailService.sendEmail_RecoveryPass(user.email,user.fullName,token);
+    await this.emailService.sendEmail_RecoveryPass(user.email,user.fullName,id);
 
     // return response;
     return {
       ok: "true",
       status: "201",
-      message: "We have sent you an email to recovery your password.!!",
-      token,
+      message: "We have sent you an email to recovery your password.!!"
     };
 
     } catch (error) {
@@ -101,11 +99,16 @@ export class AuthService {
 
   }
 
-  async resetPassword({password}: PasswordDto, user ){
+  async resetPassword({password, confirm_password}: PasswordDto, userId: string ){
   const passwordHashed = encryptPassword(password);
   try {
+    
+    if(password !== confirm_password){
+      throw new HttpException("Password are different", HttpStatus.NOT_FOUND)
+    }
+
     await this.prisma.user.update({
-      where: {id: user.id},
+      where: {id: userId},
       data: {password: passwordHashed},
     });
 

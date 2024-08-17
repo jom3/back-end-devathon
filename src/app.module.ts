@@ -22,6 +22,8 @@ import { EmailModule } from './email/email.module';
     CouponModule,
     EmailModule,
   ],
-  providers: [AppService, PrismaService, CouponService, AuthService, UserService, GoogleStrategy],
+  providers: [AppService, PrismaService, CouponService, AuthService, UserService, 
+    // GoogleStrategy
+  ],
 })
 export class AppModule {}
