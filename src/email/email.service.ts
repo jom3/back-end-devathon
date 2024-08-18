@@ -41,7 +41,7 @@ export class EmailService {
         const html = recoveryPassTemplate(userName, userId);
         
         await this.mailerService.sendMail({
-            from: "< no-reply >: slowmoviessupport@gmail.com",
+            from: "slowmoviessupport@gmail.com",
             to: email,
             subject: subjectString,
             html: html

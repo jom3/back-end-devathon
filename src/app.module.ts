@@ -23,7 +23,7 @@ import { EmailModule } from './email/email.module';
     EmailModule,
   ],
   providers: [AppService, PrismaService, CouponService, AuthService, UserService, 
-    // GoogleStrategy
+    GoogleStrategy
   ],
 })
 export class AppModule {}

@@ -156,7 +156,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
   
   
 <div class="u-row-container" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 550px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #31363F;border-radius:10px 10px 0 0">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 550px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #525255;border-radius:10px 10px 0 0">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
       <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:550px;"><tr style="background-color: #d5827c;"><![endif]-->
       
@@ -191,7 +191,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:15px 10px 10px;font-family:'Lato',sans-serif;" align="left">
         
   <!--[if mso]><table width="100%"><tr><td><![endif]-->
-    <h1 style="margin: 0px; color: #CD1818; line-height: 140%; text-align: center; word-wrap: break-word; font-family: book antiqua,palatino; font-size: 35px; font-weight: 400;"><span><span>${dataMail.title}</span></span></h1>
+    <h1 style="margin: 0px; color: #faad06; line-height: 140%; text-align: center; word-wrap: break-word; font-family: book antiqua,palatino; font-size: 35px; font-weight: 400;"><span><span>${dataMail.title}</span></span></h1>
   <!--[if mso]></td></tr></table><![endif]-->
 
       </td>
@@ -227,7 +227,7 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
   
   
 <div class="u-row-container" style="padding: 0px;background-color: transparent">
-  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 550px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #31363F;">
+  <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 550px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #525255;">
     <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
       <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:550px;"><tr style="background-color: #d5827c;"><![endif]-->
       

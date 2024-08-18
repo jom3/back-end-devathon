@@ -63,7 +63,7 @@ export class AuthService {
 
   //Recovery password
   async createEmailToken({email}: EmailDto){
-    let user: {id: string, email: string, fullName: string};
+    let user: {id: string, email: string, fullName: string};    
     try {
       user = await this.prisma.user.findUnique({
         where: {
@@ -99,11 +99,11 @@ export class AuthService {
 
   }
 
-  async resetPassword({password, confirm_password}: PasswordDto, userId: string ){
-  const passwordHashed = encryptPassword(password);
+  async resetPassword({newPassword, newConfirmPassword}: PasswordDto, userId: string ){
+  const passwordHashed = encryptPassword(newPassword);
   try {
     
-    if(password !== confirm_password){
+    if(newPassword !== newConfirmPassword){
       throw new HttpException("Password are different", HttpStatus.NOT_FOUND)
     }
 
