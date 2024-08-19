@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -14,39 +15,181 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  dni       String?    @unique
-  fullName  String
-  role      UserRole? @default(USER)
-  email     String    @unique
-  password  String   
-  phone     String?
-  genre     String?
-  country   String?
-  coupons   Coupon[]
-  
+  id       String    @id @default(uuid())
+  dni      String    @unique
+  fullName String
+  role     UserRole? @default(USER)
+  email    String    @unique
+  password String
+  phone    String?
+  address  String?
+  country  String?
+
   create_at DateTime  @default(now())
   update_at DateTime  @default(now())
+  Booking   Booking[]
 }
 
 model Coupon {
-  id          String   @id @default(uuid())
-  code        String   @unique
-  discount    Int
-  type        String   @default("percent")
-  expires_at  DateTime
-  used        Boolean  @default(false)
-  userId      String?
-  user        User?     @relation(fields: [userId], references: [id])
-  create_at   DateTime @default(now())  
-  update_at   DateTime @default(now())
+  couponId   String   @id @default(uuid())
+  discount   Int
+  used       Boolean  @default(false)
+  state      Int
+  create_at  DateTime @default(now())
+  expires_at DateTime
 }
 
 model Movie {
-  id        Int     @id @default(autoincrement())
-  title     String
-  genre     String
-  available Boolean @default(true)
+  movieID           Int          @id
+  externalID        Int
+  adult             Boolean      @default(false)
+  backdrop_path     String
+  genre_ids         Int[]
+  original_language String
+  original_title    String
+  overview          String
+  desc              String
+  popularity        Int
+  poster_path       String
+  releaseDate       DateTime
+  cast              String[]
+  title             String
+  video             Boolean      @default(false)
+  trailler          String
+  vote_average      Int
+  vote_count        Int
+  revenue           Int?
+  runtime           String?
+  duration          Int
+  language          String
+  status            String
+  genres            String[]
+  Show              Show[]
+  CinemaHall        CinemaHall[]
+  CinemaSeat        CinemaSeat[]
+}
+
+model Show {
+  showID       Int        @id @default(autoincrement())
+  date         DateTime
+  startTime    DateTime
+  endTime      DateTime
+  cinemaHallID Cinema     @relation(fields: [cinemaHall], references: [cinemaID])
+  cinemaHall   Int
+  movieID      Int
+  movie        Movie      @relation(fields: [movieID], references: [movieID])
+  Booking      Booking[]
+  ShowSeat     ShowSeat[]
+}
+
+// sala de cine
+model CinemaHall {
+  cinemaHallID Int          @id
+  name         String
+  totalSeats   Int
+  cinemaID     Int
+  Cinema       Cinema       @relation(fields: [cinemaID], references: [cinemaID])
+  CinemaSeat   CinemaSeat[]
+  Movie        Movie?       @relation(fields: [movieMovieID], references: [movieID])
+  movieMovieID Int?
+}
+
+model CinemaSeat {
+  cinemaSeatID   Int           @id
+  seatNumber     Int
+  type           TIPOS_BUTACAS @default(STANDARD)
+  cinema         CinemaHall    @relation(fields: [cinemaHallID], references: [cinemaHallID])
+  cinemaHallID   Int
+  Movie          Movie?        @relation(fields: [movieID], references: [movieID])
+  movieID        Int?
+  ShowSeat       ShowSeat[]
+  Cinema         Cinema?       @relation(fields: [cinemaCinemaID], references: [cinemaID])
+  cinemaCinemaID Int?
+}
+
+model Cinema {
+  cinemaID   Int          @id @default(autoincrement())
+  name       String
+  address    String
+  phone      String
+  email      String
+  Show       Show[]
+  // cityID     Int
+  // City       City         @relation(fields: [cityID], references: [cityID])
+  CinemaHall CinemaHall[]
+  CinemaSeat CinemaSeat[]
+}
+
+// model City {
+//   cityID    Int      @id
+//   name      String
+//   countryID Int
+//   Country   Country? @relation(fields: [countryID], references: [countryID])
+//   Cinema    Cinema[]
+// }
+
+// model Country {
+//   countryID Int    @id
+//   name      String
+//   City      City[]
+// }
+
+model ShowSeat {
+  showSeatID   Int            @id
+  status       STATUS_BUTACAS @default(LIBRE)
+  price        Int
+  cinemaSeat   CinemaSeat     @relation(fields: [cinemaSeatID], references: [cinemaSeatID])
+  cinemaSeatID Int
+  showID       Int
+  show         Show           @relation(fields: [showID], references: [showID])
+  bookingID    Int
+  booking      Booking        @relation(fields: [bookingID], references: [bookingID])
+}
+
+model Payment {
+  paymentID        Int        @id
+  amount           Int
+  timestamp        DateTime
+  discountCouponID Int
+  paymentMethod    FORMA_PAGO @default(TARJETA_DEBITO)
+  bookingID        Int
+  booking          Booking    @relation(fields: [bookingID], references: [bookingID])
+}
+
+model Booking {
+  bookingID    Int            @id @default(autoincrement())
+  numberOfSeat String
+  timestamp    DateTime
+  status       BOOKING_STATUS @default(NO_CONFIRMADO)
+  userID       String
+  user         User           @relation(fields: [userID], references: [id])
+  showID       Int
+  show         Show           @relation(fields: [showID], references: [showID])
+  ShowSeat     ShowSeat[]
+  Payment      Payment[]
+}
+
+enum TIPOS_BUTACAS {
+  STANDARD
+  VIP
+  PREMIUM
+}
+
+enum STATUS_BUTACAS {
+  OCUPADA
+  HOLD
+  LIBRE
+}
+
+enum FORMA_PAGO {
+  EFECTIVO
+  TARJETA_CREDITO
+  TARJETA_DEBITO
+}
+
+enum BOOKING_STATUS {
+  CONFIRMADO
+  NO_CONFIRMADO
 }
 
 enum UserRole {
@@ -60,6 +203,6 @@ enum UserDocument {
   CC
   CE
   RC
-  PASSPORT  
-  OTHER 
+  PASSPORT
+  OTHER
 }

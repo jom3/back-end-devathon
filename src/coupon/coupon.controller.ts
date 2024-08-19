@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CouponService } from './coupon.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
@@ -17,18 +25,21 @@ export class CouponController {
     return this.couponService.getCoupons();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(':couponId')
+  findOne(@Param('couponId') id: string) {
     return this.couponService.getCouponById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
+  @Patch(':couponId')
+  update(
+    @Param('couponId') id: string,
+    @Body() updateCouponDto: UpdateCouponDto,
+  ) {
     return this.couponService.updateCoupon(id, updateCouponDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('couponId') id: string) {
     return this.couponService.deleteCoupon(id);
   }
 }

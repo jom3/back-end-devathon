@@ -1,9 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
-import { SwaggerModule } from '@nestjs/swagger';
-import { configsSwagger } from './docs';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
+import { configsSwagger } from './docs';
 
 async function bootstrap() {
   const logger = new Logger('Main');
@@ -12,9 +12,8 @@ async function bootstrap() {
 
   app.enableCors();
 
-   //Prefix
-     app.setGlobalPrefix('api');
- 
+  //Prefix
+  app.setGlobalPrefix('api');
 
   // validaciones de los DTOs.
   app.useGlobalPipes(
@@ -24,7 +23,7 @@ async function bootstrap() {
     }),
   );
 
-   // docs
+  // docs
   const document = SwaggerModule.createDocument(app, configsSwagger);
   SwaggerModule.setup('docs', app, document);
 

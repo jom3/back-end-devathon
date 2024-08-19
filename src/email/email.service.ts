@@ -1,60 +1,62 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import {
+  recoveryPassTemplate,
+  welcomeTemplate,
+} from './templates/emailTemplates';
 import { nameTransform } from './util/stringTransform';
-import { recoveryPassTemplate, welcomeTemplate } from './templates/emailTemplates';
 
 @Injectable()
 export class EmailService {
-    constructor(
-        private readonly configService: ConfigService,
-        private readonly mailerService: MailerService
-    ) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly mailerService: MailerService,
+  ) {}
 
-    async sendEmail_Welcome(email: string, fullName: string) {
+  async sendEmail_Welcome(email: string, fullName: string) {
     try {
-        let userName = nameTransform(fullName);
+      let userName = nameTransform(fullName);
 
-        let subjectString = `Hola ${userName}, Bienvenido a SlowMovies`;
+      let subjectString = `Hola ${userName}, Bienvenido a SlowMovies`;
 
-        const html = welcomeTemplate(userName);
+      const html = welcomeTemplate(userName);
 
-        await this.mailerService.sendMail({
-            from: "slowmoviessupport@gmail.com",
-            to: email,
-            subject: subjectString,
-            html: html
-        });
-    
-        return;
+      await this.mailerService.sendMail({
+        from: 'slowmoviessupport@gmail.com',
+        to: email,
+        subject: subjectString,
+        html: html,
+      });
+
+      return;
     } catch (error) {
-        throw new ForbiddenException(error.message);
+      throw new ForbiddenException(error.message);
     }
-    }
+  }
 
-    async sendEmail_RecoveryPass(email: string, fullName: string, token: string) {
+  async sendEmail_RecoveryPass(email: string, fullName: string, token: string) {
     try {
-        let userName = nameTransform(fullName);
+      let userName = nameTransform(fullName);
 
-        let subjectString = `Hola ${userName}, Recuperación de Contraseña`;
+      let subjectString = `Hola ${userName}, Recuperación de Contraseña`;
 
-        const html = recoveryPassTemplate(userName, token);
+      const html = recoveryPassTemplate(userName, token);
 
-        await this.mailerService.sendMail({
-            from: "slowmoviessupport@gmail.com",
-            to: email,
-            subject: subjectString,
-            html: html
-        });
-        
-        return {
-            ok: "true",
-            status: "201",
-            message: "We have sent to you an email.!!"
-        };
+      await this.mailerService.sendMail({
+        from: 'slowmoviessupport@gmail.com',
+        to: email,
+        subject: subjectString,
+        html: html,
+      });
+
+      return {
+        ok: 'true',
+        status: '201',
+        message: 'We have sent to you an email.!!',
+      };
     } catch (error) {
-        throw new ForbiddenException(error.message);
+      throw new ForbiddenException(error.message);
     }
-    }
-
+  }
 }
