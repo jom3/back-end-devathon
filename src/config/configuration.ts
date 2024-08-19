@@ -5,6 +5,5 @@ export default () => ({
   nodemailer_host: process.env.NODEMAILER_HOST,
   nodemailer_user: process.env.NODEMAILER_USER,
   nodemailer_password: process.env.NODEMAILER_PASSWORD,
-  nodemailer_email_from: process.env.NODEMAILER_EMAIL_FROM
-
+  nodemailer_email_from: process.env.NODEMAILER_EMAIL_FROM,
 });

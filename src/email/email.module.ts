@@ -1,28 +1,30 @@
-import { Module } from '@nestjs/common';
-import { EmailService } from './email.service';
-import { ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { EmailService } from './email.service';
 
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      useFactory: async (configService :ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         transport: {
-          host: configService.get("nodemailer_host"),
+          host: configService.get('nodemailer_host'),
           secure: false,
           auth: {
-            user: configService.get("nodemailer_user"),
-            pass: configService.get("nodemailer_password")
-          }
+            user: configService.get('nodemailer_user'),
+            pass: configService.get('nodemailer_password'),
+          },
         },
         defaults: {
-          from: `No Replay: <${configService.get("nodemailer_email_from")}>`
-        }
+          from: `No Replay: <${configService.get('nodemailer_email_from')}>`,
+        },
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
+    ConfigModule,
   ],
-  providers: [EmailService, ConfigService],
-  exports: [EmailService]
+  providers: [EmailService, ConfigService, PrismaService, ConfigService],
+  exports: [EmailService],
 })
 export class EmailModule {}

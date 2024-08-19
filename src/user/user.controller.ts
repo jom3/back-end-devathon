@@ -1,11 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import { UserService } from './user.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { PaginationDto } from 'src/common/dtos';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationDto } from 'src/common/dtos';
-import { ApiTags } from '@nestjs/swagger';
+import { UserService } from './user.service';
 
-@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -32,6 +39,11 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-   return this.userService.remove(id);
+    return this.userService.remove(id);
+  }
+
+  @Get('findUser/:email')
+  findUser(@Param('email') email: string) {
+    return this.userService.getCurrentUser(email);
   }
 }

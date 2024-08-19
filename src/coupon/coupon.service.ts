@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCouponDto } from './dto/create-coupon.dto';
-import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateCouponDto } from './dto';
+import { UpdateCouponDto } from './dto/update-coupon.dto';
 
 @Injectable()
 export class CouponService {
-
   constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateCouponDto) {
     return this.prisma.coupon.create({
@@ -19,21 +18,21 @@ export class CouponService {
 
   async getCouponById(id: string) {
     return this.prisma.coupon.findUnique({
-      where: { id },
+      where: { couponId: id },
     });
   }
 
   //async updateCoupon(id: string, data: Partial<{ code: string; discount: number; expires_at: Date }>) {
   async updateCoupon(id: string, data: Partial<UpdateCouponDto>) {
     return this.prisma.coupon.update({
-      where: { id },
+      where: { couponId: id },
       data,
     });
   }
 
   async deleteCoupon(id: string) {
     return this.prisma.coupon.delete({
-      where: { id },
+      where: { couponId: id },
     });
   }
 }
