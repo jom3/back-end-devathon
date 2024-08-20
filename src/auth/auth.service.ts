@@ -64,8 +64,8 @@ export class AuthService {
   }
 
   //Recovery password
-  async createEmailToken({ email }: EmailDto) {
-    let user: { id: string; email: string; fullName: string };
+  async createEmailToken({email}: EmailDto){
+    let user: {id: string, email: string, fullName: string};    
     try {
       user = await this.prisma.user.findUnique({
         where: {
@@ -82,38 +82,37 @@ export class AuthService {
         throw new UnauthorizedException('Invalidad Email');
       }
 
-      //Creating new Token
-      const payload = { id: user.id };
-      const token = await this.jwtService.signAsync(payload, {
-        expiresIn: '5m',
-      });
+    //Creating new Token
+    const id = user.id
+    
+    //Send Email: read .env.example to use it.
+    await this.emailService.sendEmail_RecoveryPass(user.email,user.fullName,id);
 
-      //Send Email: read .env.example to use it.
-      const response = await this.emailService.sendEmail_RecoveryPass(
-        user.email,
-        user.fullName,
-        token,
-      );
+    // return response;
+    return {
+      ok: "true",
+      status: "201",
+      message: "We have sent you an email to recovery your password.!!"
+    };
 
-      // return response;
-      return {
-        ok: 'true',
-        status: '201',
-        message: 'We have sent you an email to recovery your password.!!',
-        token,
-      };
+      
     } catch (error) {
       throw new NotFoundException(error.message);
     }
   }
 
-  async resetPassword({ password }: PasswordDto, user) {
-    const passwordHashed = encryptPassword(password);
-    try {
-      await this.prisma.user.update({
-        where: { id: user.id },
-        data: { password: passwordHashed },
-      });
+  async resetPassword({newPassword, newConfirmPassword}: PasswordDto, userId: string ){
+  const passwordHashed = encryptPassword(newPassword);
+  try {
+    
+    if(newPassword !== newConfirmPassword){
+      throw new HttpException("Password are different", HttpStatus.NOT_FOUND)
+    }
+
+    await this.prisma.user.update({
+      where: {id: userId},
+      data: {password: passwordHashed},
+    });
 
       return {
         ok: 'true',

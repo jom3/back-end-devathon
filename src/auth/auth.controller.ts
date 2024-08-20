@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { EmailDto, LoginDto, PasswordDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -36,11 +36,12 @@ export class AuthController {
       return this.authService.createEmailToken(emailDto);
     }
 
-  @Post('recoverypass/resetpassword')
-  @UseGuards(AuthGuard)
-  recoveryPassword(@GetUser() user,@Body() passwordDto: PasswordDto){
-    return this.authService.resetPassword(passwordDto, user);
-  }
+  @Patch('recoverypass/resetpassword/:id')
+    recoveryPassword(
+      @Param("id") id: string,
+      @Body() passwordDto: PasswordDto){
+      return this.authService.resetPassword(passwordDto, id);
+    }
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
