@@ -7,9 +7,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { PasswordService } from './password.service';
 
 @Module({
-  providers: [AuthService, PrismaService, EmailService],
+  providers: [AuthService, PrismaService, EmailService, PasswordService],
   controllers: [AuthController],
   imports: [
     JwtModule.registerAsync({
@@ -24,7 +25,7 @@ import { AuthService } from './auth.service';
     }),
     PrismaModule,
     UserModule,
-    AuthModule,
+    AuthModule
   ],
   exports: [AuthService, JwtModule],
 })
