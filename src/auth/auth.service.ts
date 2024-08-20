@@ -158,7 +158,7 @@ export class AuthService {
   }
 
   async registerUserFromGoogle(data: any) {
-    const { email, fullName } = data;
+    const { email, name } = data;
     const password = this.passwordService.generateRandomPassword(8); // Generate random password
     const passwordHashed = encryptPassword(password);
     const userExists = await this.findUserByEmail(email);
@@ -175,7 +175,7 @@ export class AuthService {
               data: {
                 email,
                 password: passwordHashed,
-                fullName,          
+                fullName: name         
               }
               });
               return {
@@ -206,8 +206,7 @@ export class AuthService {
     const payload = { id: user.id, role: user.role, user: user.fullName, email: user.email };
     const accessToken = await this.jwtService.signAsync(payload, {expiresIn: '15m'});
     return {
-      message: 'User information',
-      accessToken,
+      accessToken
     }
   }
 } 
