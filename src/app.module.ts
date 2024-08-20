@@ -20,6 +20,7 @@ import { ShowSeatsModule } from './show-seats/show-seats.module';
 import { ShowsModule } from './shows/shows.module';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
+import { PasswordService } from './auth/password.service';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UserService } from './user/user.service';
     MovieService,
     ConfigService,
     GoogleStrategy,
+    PasswordService
   ],
 })
 export class AppModule {}
