@@ -21,7 +21,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
-    private readonly passwordService: PasswordService
+    private readonly passwordService: PasswordService,
   ) {}
 
   async login({ email, password }: LoginDto) {
@@ -64,65 +64,69 @@ export class AuthService {
   }
 
   //Recovery password
-  async createEmailToken({email}: EmailDto){
-    let user: {id: string, email: string, fullName: string};
+  async createEmailToken({ email }: EmailDto) {
+    let user: { id: string; email: string; fullName: string };
     try {
       user = await this.prisma.user.findUnique({
         where: {
-            email,
+          email,
         },
         select: {
           id: true,
           email: true,
-          fullName: true
-        } 
+          fullName: true,
+        },
       });
 
-    if(!user){
-      throw new UnauthorizedException("Invalidad Email")
-    }
+      if (!user) {
+        throw new UnauthorizedException('Invalidad Email');
+      }
 
-    //Creating new Token
-    const payload = {id: user.id}
-    const token = await this.jwtService.signAsync(payload, {expiresIn: '5m'})
-    
-    //Send Email: read .env.example to use it.
-    const response = await this.emailService.sendEmail_RecoveryPass(user.email,user.fullName,token);
+      //Creating new Token
+      const payload = { id: user.id };
+      const token = await this.jwtService.signAsync(payload, {
+        expiresIn: '5m',
+      });
 
-    // return response;
-    return {
-      ok: "true",
-      status: "201",
-      message: "We have sent you an email to recovery your password.!!",
-      token,
-    };
+      //Send Email: read .env.example to use it.
+      const response = await this.emailService.sendEmail_RecoveryPass(
+        user.email,
+        user.fullName,
+        token,
+      );
 
+      // return response;
+      return {
+        ok: 'true',
+        status: '201',
+        message: 'We have sent you an email to recovery your password.!!',
+        token,
+      };
     } catch (error) {
       throw new NotFoundException(error.message);
     }
-
   }
 
-  async resetPassword({password}: PasswordDto, user ){
-  const passwordHashed = encryptPassword(password);
-  try {
-    await this.prisma.user.update({
-      where: {id: user.id},
-      data: {password: passwordHashed},
-    });
+  async resetPassword({ password }: PasswordDto, user) {
+    const passwordHashed = encryptPassword(password);
+    try {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { password: passwordHashed },
+      });
 
-    return {
-      ok: "true",
-      status: "201",
-      message: "Your Password has been chanced!!"
+      return {
+        ok: 'true',
+        status: '201',
+        message: 'Your Password has been chanced!!',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
     }
-  } catch (error) {
-    throw new InternalServerErrorException(error.message);
-  }
   }
 
-   // Oauth2.0 ~ Google
-   async googleLogin(req: { user: any; }) {
+  // Oauth2.0 ~ Google
+  async googleLogin(req: { user: any }) {
     try {
       if (!req.user) {
         throw new BadRequestException('Unauthenticated');
@@ -130,11 +134,11 @@ export class AuthService {
 
       return {
         message: 'User information from google',
-        user: req.user
-      }  
+        user: req.user,
+      };
     } catch (err) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    } 
+    }
   }
 
   async googleLoginValidate(data: any) {
@@ -147,7 +151,10 @@ export class AuthService {
       });
 
       if (!verifytoken) {
-        throw new HttpException('Token no válido o ha expirado', HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          'Token no válido o ha expirado',
+          HttpStatus.FORBIDDEN,
+        );
       }
 
       const userInfo = verifytoken.getPayload();
@@ -170,29 +177,31 @@ export class AuthService {
         token,
       };
     } else {
-          try {
-            const user = await this.prisma.user.create({ //TODO: Validar este Registro.
-              data: {
-                email,
-                password: passwordHashed,
-                fullName: name         
-              }
-              });
-              return {
-                message: "User has been created!!",
-                token: await this.gererateTokenJwt(user),
-              }
-          } catch (error) {
-            throw new InternalServerErrorException(error.message);
-        }
-    } 
+      try {
+        const user = await this.prisma.user.create({
+          //TODO: Validar este Registro.
+          data: {
+            email,
+            password: passwordHashed,
+            dni: null,
+            fullName: name,
+          },
+        });
+        return {
+          message: 'User has been created!!',
+          token: await this.gererateTokenJwt(user),
+        };
+      } catch (error) {
+        throw new InternalServerErrorException(error.message);
+      }
+    }
   }
 
   async findUserByEmail(email: string) {
     const user = await this.prisma.user.findUnique({
-        where: {
-          email: email,
-        },
+      where: {
+        email: email,
+      },
     });
 
     if (!user) {
@@ -203,10 +212,17 @@ export class AuthService {
   }
 
   async gererateTokenJwt(user: any) {
-    const payload = { id: user.id, role: user.role, user: user.fullName, email: user.email };
-    const accessToken = await this.jwtService.signAsync(payload, {expiresIn: '15m'});
+    const payload = {
+      id: user.id,
+      role: user.role,
+      user: user.fullName,
+      email: user.email,
+    };
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '15m',
+    });
     return {
-      accessToken
-    }
+      accessToken,
+    };
   }
-} 
+}
