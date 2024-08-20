@@ -164,10 +164,10 @@ export class AuthService {
     const userExists = await this.findUserByEmail(email);
 
     if (userExists) {
-      const token = await this.gererateTokenJwt(userExists);
+      const data = await this.gererateTokenJwt(userExists);
       return {
         message: 'User already exists',
-        token,
+        data,
       };
     } else {
           try {
@@ -204,9 +204,9 @@ export class AuthService {
 
   async gererateTokenJwt(user: any) {
     const payload = { id: user.id, role: user.role, user: user.fullName, email: user.email };
-    const accessToken = await this.jwtService.signAsync(payload, {expiresIn: '15m'});
+    const token = await this.jwtService.signAsync(payload, {expiresIn: '15m'});
     return {
-      accessToken
+      token
     }
   }
 } 
