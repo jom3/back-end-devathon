@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { EmailDto, LoginDto, PasswordDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -38,21 +38,27 @@ export class AuthController {
 
   @Post('recoverypass/resetpassword')
   @UseGuards(AuthGuard)
-    recoveryPassword(
-      @GetUser() user,
-      @Body() passwordDto: PasswordDto){
-      return this.authService.resetPassword(passwordDto, user);
-    }
+  recoveryPassword(@GetUser() user,@Body() passwordDto: PasswordDto){
+    return this.authService.resetPassword(passwordDto, user);
+  }
 
   @Get('google')
-  //@UseGuards(AuthGuard('google'))
   @UseGuards(GoogleOauthGuard)
   async googleAuth(@Req() req) {}
-
-  @Get('google/redirect')
-  //@UseGuards(AuthGuard('google'))
+  
+  @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  googleAuthRedirect(@Req() req) {
+  googleAuthRedirect(@Req() req: any) {
     return this.authService.googleLogin(req)
+  }
+
+  @Post('google/validate')
+  async googleRegister(@Body() data: any) {
+    //Validacion de token de google
+    const userGoogleMetadata = await this.authService.googleLoginValidate(data.token);
+    if(!userGoogleMetadata) throw new UnauthorizedException('Invalid Token');
+    //Validacion de Usario en la base de datos
+    const dataUser = await this.authService.registerUserFromGoogle(userGoogleMetadata);
+    return dataUser;
   }
 }

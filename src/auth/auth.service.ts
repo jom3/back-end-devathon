@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -10,9 +11,9 @@ import { EmailDto, LoginDto, PasswordDto } from './dto';
 import { comparePassword, encryptPassword } from './util/bcryptjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { EmailService } from 'src/email/email.service';
+import { OAuth2Client } from 'google-auth-library';
+import { PasswordService } from './password.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
+    private readonly passwordService: PasswordService
   ) {}
 
   async login({ email, password }: LoginDto) {
@@ -119,19 +121,93 @@ export class AuthService {
   }
   }
 
-  // Oauth2.0 ~ Google
-  async googleLogin(req: { user: any; }) {
+   // Oauth2.0 ~ Google
+   async googleLogin(req: { user: any; }) {
     try {
       if (!req.user) {
-        return 'No user from google'
+        throw new BadRequestException('Unauthenticated');
       }
-  
+
       return {
         message: 'User information from google',
         user: req.user
       }  
     } catch (err) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    } 
+  }
+
+  async googleLoginValidate(data: any) {
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    const clientValidateToken = new OAuth2Client(googleClientId);
+    try {
+      const verifytoken = await clientValidateToken.verifyIdToken({
+        idToken: data,
+        audience: googleClientId,
+      });
+
+      if (!verifytoken) {
+        throw new HttpException('Token no válido o ha expirado', HttpStatus.FORBIDDEN);
+      }
+
+      const userInfo = verifytoken.getPayload();
+      return userInfo;
+    } catch (err) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
   }
-}
+
+  async registerUserFromGoogle(data: any) {
+    const { email, fullName } = data;
+    const password = this.passwordService.generateRandomPassword(8); // Generate random password
+    const passwordHashed = encryptPassword(password);
+    const userExists = await this.findUserByEmail(email);
+
+    if (userExists) {
+      const token = await this.gererateTokenJwt(userExists);
+      return {
+        message: 'User already exists',
+        token,
+      };
+    } else {
+          try {
+            const user = await this.prisma.user.create({ //TODO: Validar este Registro.
+              data: {
+                email,
+                password: passwordHashed,
+                fullName,          
+              }
+              });
+              return {
+                message: "User has been created!!",
+                token: await this.gererateTokenJwt(user),
+              }
+          } catch (error) {
+            throw new InternalServerErrorException(error.message);
+        }
+    } 
+  }
+
+  async findUserByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  }
+
+  async gererateTokenJwt(user: any) {
+    const payload = { id: user.id, role: user.role, user: user.fullName, email: user.email };
+    const accessToken = await this.jwtService.signAsync(payload, {expiresIn: '15m'});
+    return {
+      message: 'User information',
+      accessToken,
+    }
+  }
+} 
