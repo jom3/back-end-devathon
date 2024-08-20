@@ -2,6 +2,7 @@ import { ShowSeat } from './../show-seats/entities/show-seat.entity';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BookingsService {
@@ -28,22 +29,26 @@ export class BookingsService {
         this.prisma
           .$queryRaw`UPDATE "Booking" SET "status" = 'CONFIRMADO' WHERE "bookingID" = currval('"Booking_bookingID_seq"')`,
 
-        this.prisma.showSeat.updateMany({
-          where: {
-            cinemaSeatID: {
-              in: numberOfSeats,
-            },
-            showID: {
-              equals: showID,
-            },
-            status: {
-              not: 'OCUPADA',
-            },
-          },
-          data: {
-            status: 'OCUPADA',
-          },
-        }),
+        this.prisma
+          .$executeRawUnsafe(`UPDATE "ShowSeat" SET "status" = 'OCUPADA' , "bookingID" = currval('"Booking_bookingID_seq"') 
+        WHERE "cinemaSeatID"  in (${numberOfSeats}) and "showID" = ${showID}`),
+
+        // this.prisma.showSeat.updateMany({
+        //   where: {
+        //     cinemaSeatID: {
+        //       in: numberOfSeats,
+        //     },
+        //     showID: {
+        //       equals: showID,
+        //     },
+        //     status: {
+        //       not: 'OCUPADA',
+        //     },
+        //   },
+        //   data: {
+        //     status: 'OCUPADA',
+        //   },
+        // }),
       ]);
     } catch (error) {
       throw new Error(error);
