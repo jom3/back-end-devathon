@@ -35,26 +35,26 @@ export class EmailService {
     }
   }
 
-  async sendEmail_RecoveryPass(email: string, fullName: string, token: string) {
+    async sendEmail_RecoveryPass(email: string, fullName: string, userId: string) {
     try {
       let userName = nameTransform(fullName);
 
-      let subjectString = `Hola ${userName}, Recuperación de Contraseña`;
-
-      const html = recoveryPassTemplate(userName, token);
-
-      await this.mailerService.sendMail({
-        from: 'slowmoviessupport@gmail.com',
-        to: email,
-        subject: subjectString,
-        html: html,
-      });
-
-      return {
-        ok: 'true',
-        status: '201',
-        message: 'We have sent to you an email.!!',
-      };
+        let subjectString = `Hola ${userName}, Recuperación de Contraseña`;
+        
+        const html = recoveryPassTemplate(userName, userId);
+        
+        await this.mailerService.sendMail({
+            from: "slowmoviessupport@gmail.com",
+            to: email,
+            subject: subjectString,
+            html: html
+        });
+        
+        return {
+            ok: "true",
+            status: "201",
+            message: "We have sent to you an email.!!"
+        };
     } catch (error) {
       throw new ForbiddenException(error.message);
     }
