@@ -19,9 +19,13 @@ export class BookingsController {
     return this.bookingsService.getAllPayedBookings();
   }
 
+  @Get(':userID/:showID')
+  getUserPaymentsDetails(@Param('userID') userID, @Param('showID') showID) {
+    return this.bookingsService.getUserPaymentsDetails(userID, showID);
+  }
+
   @Post()
   create(@Body() data: any) {
-    console.log(data);
     return this.bookingsService.create(data);
   }
 

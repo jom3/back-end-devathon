@@ -432,7 +432,6 @@ const main = async () => {
         movieID: 718821,
       },
     });
-    console.log('Seed data generated successfully');
   } catch (e) {
     console.error(e);
     process.exit(1);

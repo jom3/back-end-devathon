@@ -19,6 +19,7 @@ model User {
   fullName String
   role     UserRole? @default(USER)
   email    String    @unique
+  genre String?  
   password String
   phone    String?
   address  String?
