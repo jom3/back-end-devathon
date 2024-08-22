@@ -2,8 +2,15 @@ import { Body, Controller, Get, Param, Patch, Post, Req, UnauthorizedException, 
 import { AuthService } from './auth.service';
 import { EmailDto, LoginDto, PasswordDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
-import { signUpPostApi } from 'src/docs/auth-api/signUpPost.decorator';
-import { signInPostApi } from 'src/docs/auth-api/signInPost.decorator';
+import { 
+  signUpPostApi,
+  signInPostApi,
+  recoveryPassPostApi,
+  resetPassPostApi,
+  authGoogleGetApi,
+  authGoogleCBGetApi,
+  authGoogleValidatePostApi
+} from 'src/docs/auth-api/idex';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
 import { GoogleOauthGuard } from './guard/google-oauth.guard';
@@ -32,11 +39,13 @@ export class AuthController {
 
   //Recovery Password
   @Post('recoverypass')
+  @recoveryPassPostApi()
     searchEmail(@Body() emailDto: EmailDto){
       return this.authService.createEmailToken(emailDto);
     }
 
   @Patch('recoverypass/resetpassword/:id')
+  @resetPassPostApi()
     recoveryPassword(
       @Param("id") id: string,
       @Body() passwordDto: PasswordDto){
@@ -44,16 +53,19 @@ export class AuthController {
     }
 
   @Get('google')
+  @authGoogleGetApi()
   @UseGuards(GoogleOauthGuard)
   async googleAuth(@Req() req) {}
   
   @Get('google/callback')
+  @authGoogleCBGetApi()
   @UseGuards(GoogleOauthGuard)
   googleAuthRedirect(@Req() req: any) {
     return this.authService.googleLogin(req)
   }
 
   @Post('google/validate')
+  @authGoogleValidatePostApi()
   async googleRegister(@Body() data: any) {
     //Validacion de token de google
     const userGoogleMetadata = await this.authService.googleLoginValidate(data.token);

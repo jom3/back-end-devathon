@@ -10,7 +10,9 @@ import {
 import { CinemaHallsService } from './cinema-halls.service';
 import { CreateCinemaHallDto } from './dto/create-cinema-hall.dto';
 import { UpdateCinemaHallDto } from './dto/update-cinema-hall.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cinema-halls')
 @Controller('cinema-halls')
 export class CinemaHallsController {
   constructor(private readonly cinemaHallsService: CinemaHallsService) {}

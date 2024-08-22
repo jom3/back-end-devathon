@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ShowSeatsService } from './show-seats.service';
 import { CreateShowSeatDto } from './dto/create-show-seat.dto';
 import { UpdateShowSeatDto } from './dto/update-show-seat.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Show-seats')
 @Controller('show-seats')
 export class ShowSeatsController {
   constructor(private readonly showSeatsService: ShowSeatsService) {}

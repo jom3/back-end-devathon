@@ -10,7 +10,9 @@ import {
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieService } from './movie.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Movie')
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}

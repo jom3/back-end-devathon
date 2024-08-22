@@ -10,7 +10,9 @@ import {
 import { CreateShowDto } from './dto/create-show.dto';
 import { UpdateShowDto } from './dto/update-show.dto';
 import { ShowsService } from './shows.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Shows')
 @Controller('shows')
 export class ShowsController {
   constructor(private readonly showsService: ShowsService) {}
