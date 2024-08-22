@@ -117,7 +117,7 @@ export class AuthService {
       return {
         ok: 'true',
         status: '201',
-        message: 'Your Password has been chanced!!',
+        message: 'Your Password has been changed!!',
       };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
