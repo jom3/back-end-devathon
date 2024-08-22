@@ -103,7 +103,6 @@ GROUP BY "ShowSeat"."price", "CinemaSeat"."type"
   }
 
   private async updateStatus(seatNumber: number, showId: number) {
-    console.log(seatNumber);
     this.prisma
       .$queryRaw`UPDATE "ShowSeat" SET "status" = 'OCUPADA' WHERE "showID" = ${showId} and "cinemaSeatID" = ${seatNumber};`;
   }

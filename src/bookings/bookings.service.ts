@@ -32,23 +32,6 @@ export class BookingsService {
         this.prisma
           .$executeRawUnsafe(`UPDATE "ShowSeat" SET "status" = 'OCUPADA' , "bookingID" = currval('"Booking_bookingID_seq"') 
         WHERE "cinemaSeatID"  in (${numberOfSeats}) and "showID" = ${showID}`),
-
-        // this.prisma.showSeat.updateMany({
-        //   where: {
-        //     cinemaSeatID: {
-        //       in: numberOfSeats,
-        //     },
-        //     showID: {
-        //       equals: showID,
-        //     },
-        //     status: {
-        //       not: 'OCUPADA',
-        //     },
-        //   },
-        //   data: {
-        //     status: 'OCUPADA',
-        //   },
-        // }),
       ]);
     } catch (error) {
       throw new Error(error);
@@ -75,6 +58,7 @@ export class BookingsService {
 
   async getAllPayedBookings() {
     return this.prisma.$queryRaw`select DISTINCT "User"."fullName", 
+
     "Booking"."bookingID",
     "Booking"."numberOfSeat" as "nbutaca", 
     "Booking"."status" as "estado",
@@ -89,5 +73,26 @@ export class BookingsService {
  inner join "Show" on "ShowSeat"."showID" = "Show"."showID"
  inner join "Movie" on "Movie"."movieID" = "Show"."movieID"
 `;
+  }
+
+  async getUserPaymentsDetails(userID: string, showID: number) {
+    console.log(showID, userID);
+    return this.prisma
+      .$queryRaw`select DISTINCT "User"."fullName", "User"."email", CAST("User"."id" as varchar) ,
+"Show"."showID",
+    "Booking"."bookingID",
+    "Booking"."numberOfSeat" as "nbutaca", 
+    "Booking"."status" as "estado",
+    "Payment"."amount" as "monto", 
+    "Movie"."title", 
+    to_char("Show"."date",'DD-MM-YYYY') as "freserva", 
+    to_char("Show"."startTime",'HH24:MI') as "horapelicula"
+ from "Booking"
+ inner join "Payment" on "Payment"."bookingID" = "Booking"."bookingID"
+ inner join "User" on "User"."id" =  "Booking"."userID"
+ inner join "ShowSeat" on "ShowSeat"."bookingID" = "Booking"."bookingID"
+ inner join "Show" on "ShowSeat"."showID" = "Show"."showID"
+ inner join "Movie" on "Movie"."movieID" = "Show"."movieID"
+ where  "User"."id" = ${userID} AND "Show"."showID" = CAST(${showID} as integer)`;
   }
 }
