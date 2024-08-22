@@ -72,4 +72,22 @@ export class BookingsService {
   }
 
   makePayment(id: number) {}
+
+  async getAllPayedBookings() {
+    return this.prisma.$queryRaw`select "User"."fullName", 
+    "Booking"."bookingID",
+    "Booking"."numberOfSeat" as "nbutaca", 
+    "Booking"."status" as "estado",
+    "Payment"."amount" as "monto", 
+    "Movie"."title", 
+    to_char("Show"."date",'DD-MM-YYYY') as "freserva", 
+    to_char("Show"."startTime",'HH24:MI') as "horapelicula"
+ from "Booking"
+ inner join "Payment" on "Payment"."bookingID" = "Booking"."bookingID"
+ inner join "User" on "User"."id" =  "Booking"."userID"
+ inner join "ShowSeat" on "ShowSeat"."bookingID" = "Booking"."bookingID"
+ inner join "Show" on "ShowSeat"."showID" = "Show"."showID"
+ inner join "Movie" on "Movie"."movieID" = "Show"."movieID"
+`;
+  }
 }

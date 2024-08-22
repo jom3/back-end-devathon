@@ -14,6 +14,11 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
+  @Get('payed')
+  getAllPayedBookings() {
+    return this.bookingsService.getAllPayedBookings();
+  }
+
   @Post()
   create(@Body() data: any) {
     console.log(data);
@@ -38,5 +43,10 @@ export class BookingsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.bookingsService.remove(+id);
+  }
+
+  @Get()
+  getAllBookings() {
+    return this.bookingsService.findAll();
   }
 }
