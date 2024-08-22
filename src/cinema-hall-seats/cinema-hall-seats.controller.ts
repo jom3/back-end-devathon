@@ -10,7 +10,9 @@ import {
 import { CinemaHallSeatsService } from './cinema-hall-seats.service';
 import { CreateCinemaHallSeatDto } from './dto/create-cinema-hall-seat.dto';
 import { UpdateCinemaHallSeatDto } from './dto/update-cinema-hall-seat.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cinema-seats')
 @Controller('cinema-seats')
 export class CinemaHallSeatsController {
   constructor(

@@ -57,8 +57,8 @@ export class BookingsService {
   makePayment(id: number) {}
 
   async getAllPayedBookings() {
-    return this.prisma
-      .$queryRaw`select DISTINCT "User"."fullName", "User"."email","User"."id",
+    return this.prisma.$queryRaw`select DISTINCT "User"."fullName", 
+
     "Booking"."bookingID",
     "Booking"."numberOfSeat" as "nbutaca", 
     "Booking"."status" as "estado",
