@@ -22,6 +22,7 @@ export class EmailsController {
 
   @Post('confirm')
   confirm(@Body() data: any) {
+    console.log('dentro de confirm controller');
     return this.mailService.sendEmail_booking(data.email, data.fullName, data);
   }
 }

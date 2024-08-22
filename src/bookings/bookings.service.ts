@@ -32,23 +32,6 @@ export class BookingsService {
         this.prisma
           .$executeRawUnsafe(`UPDATE "ShowSeat" SET "status" = 'OCUPADA' , "bookingID" = currval('"Booking_bookingID_seq"') 
         WHERE "cinemaSeatID"  in (${numberOfSeats}) and "showID" = ${showID}`),
-
-        // this.prisma.showSeat.updateMany({
-        //   where: {
-        //     cinemaSeatID: {
-        //       in: numberOfSeats,
-        //     },
-        //     showID: {
-        //       equals: showID,
-        //     },
-        //     status: {
-        //       not: 'OCUPADA',
-        //     },
-        //   },
-        //   data: {
-        //     status: 'OCUPADA',
-        //   },
-        // }),
       ]);
     } catch (error) {
       throw new Error(error);
@@ -75,7 +58,7 @@ export class BookingsService {
 
   async getAllPayedBookings() {
     return this.prisma
-      .$queryRaw`select "User"."fullName", "User"."email","User"."id",
+      .$queryRaw`select DISTINCT "User"."fullName", "User"."email","User"."id",
     "Booking"."bookingID",
     "Booking"."numberOfSeat" as "nbutaca", 
     "Booking"."status" as "estado",
@@ -93,6 +76,7 @@ export class BookingsService {
   }
 
   async getUserPaymentsDetails(userID: string, showID: number) {
+    console.log(showID, userID);
     return this.prisma
       .$queryRaw`select DISTINCT "User"."fullName", "User"."email", CAST("User"."id" as varchar) ,
 "Show"."showID",
@@ -109,6 +93,6 @@ export class BookingsService {
  inner join "ShowSeat" on "ShowSeat"."bookingID" = "Booking"."bookingID"
  inner join "Show" on "ShowSeat"."showID" = "Show"."showID"
  inner join "Movie" on "Movie"."movieID" = "Show"."movieID"
- where  "Show"."showID" = 7 and "User"."id" = ${userID}`;
+ where  "User"."id" = ${userID} AND "Show"."showID" = CAST(${showID} as integer)`;
   }
 }
