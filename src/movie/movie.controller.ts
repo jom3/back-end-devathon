@@ -11,6 +11,7 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieService } from './movie.service';
 import { ApiTags } from '@nestjs/swagger';
+import { movieFindAllGetApi} from 'src/docs/movie-api';
 
 @ApiTags('Movie')
 @Controller('movie')
@@ -23,6 +24,7 @@ export class MovieController {
   }
 
   @Get()
+  @movieFindAllGetApi()
   findAll() {
     return this.movieService.findAll();
   }
