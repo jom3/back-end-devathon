@@ -9,10 +9,10 @@ export class BookingsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createBookingDto: any) {
-    let showID = createBookingDto.showID;
-    let userID = createBookingDto.userID;
-    let numberOfSeats = createBookingDto.seats;
-    let total = createBookingDto.total;
+    let showID = createBookingDto?.showID;
+    let userID = createBookingDto?.userID;
+    let numberOfSeats = createBookingDto?.seats;
+    let total = createBookingDto?.total;
 
     try {
       const [
