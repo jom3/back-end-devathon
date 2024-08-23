@@ -63,6 +63,7 @@ export class BookingsService {
     "Booking"."numberOfSeat" as "nbutaca", 
     "Booking"."status" as "estado",
     "Payment"."amount" as "monto", 
+    "Show"."showID",
     "Movie"."title", 
     to_char("Show"."date",'DD-MM-YYYY') as "freserva", 
     to_char("Show"."startTime",'HH24:MI') as "horapelicula"
@@ -75,13 +76,12 @@ export class BookingsService {
 `;
   }
 
-  async getUserPaymentsDetails(userID: string, showID: number) {
-    console.log(showID, userID);
-    return this.prisma
-      .$queryRaw`select DISTINCT "User"."fullName", "User"."email", CAST("User"."id" as varchar) ,
-"Show"."showID",
+  async getEmailConfirmation(userID: string, showID: number) {
+    return this.prisma.$queryRaw`select DISTINCT "User"."fullName", 
     "Booking"."bookingID",
     "Booking"."numberOfSeat" as "nbutaca", 
+    "Show"."showID",
+
     "Booking"."status" as "estado",
     "Payment"."amount" as "monto", 
     "Movie"."title", 

@@ -1,4 +1,3 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import {
   Body,
   Controller,
@@ -8,21 +7,14 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-
 import { EmailService } from './email.service';
 
-@Controller('emails')
-export class EmailsController {
-  constructor(private readonly mailService: EmailService) {}
+@Controller('email')
+export class EmailController {
+  constructor(private readonly service: EmailService) {}
 
   @Post()
   create(@Body() data: any) {
-    return this.mailService.sendEmail_Welcome(data.email, data.fullName);
-  }
-
-  @Post('confirm')
-  confirm(@Body() data: any) {
-    console.log('dentro de confirm controller');
-    return this.mailService.sendEmail_booking(data.email, data.fullName, data);
+    return this.service.sendEmail_booking(data.email, data.fullName, data);
   }
 }

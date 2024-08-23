@@ -1,14 +1,6 @@
 import { htmlTemplate } from '../util/htmlTemplate';
 import { DataMail } from '../interface';
-import { nameTransform } from '../util/stringTransform';
-import { ForbiddenException } from '@nestjs/common';
-
-export interface DataBooking {
-  boodingId: string;
-  start_hour: string;
-  movie_title: string;
-  movie_date: string;
-}
+import { DataBooking } from '../email.service';
 
 export const welcomeTemplate = (fullName: string): string => {
   const data: DataMail = {

@@ -22,8 +22,11 @@ export class BookingsController {
   }
 
   @Get(':userID/:showID')
-  getUserPaymentsDetails(@Param('userID') userID, @Param('showID') showID) {
-    return this.bookingsService.getUserPaymentsDetails(userID, showID);
+  getEmailConfirmation(
+    @Param('userID') userID: string,
+    @Param('showID') showID: number,
+  ) {
+    return this.bookingsService.getEmailConfirmation(userID, showID);
   }
 
   @Post()

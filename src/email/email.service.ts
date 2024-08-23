@@ -3,11 +3,20 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   bookingTemplate,
-  DataBooking,
   recoveryPassTemplate,
   welcomeTemplate,
 } from './templates/emailTemplates';
 import { nameTransform } from './util/stringTransform';
+import { DataMail } from './interface';
+import { htmlTemplate } from './util/htmlTemplate';
+import { async } from 'rxjs';
+
+export interface DataBooking {
+  boodingId: string;
+  start_hour: string;
+  movie_title: string;
+  movie_date: string;
+}
 
 @Injectable()
 export class EmailService {
