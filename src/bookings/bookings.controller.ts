@@ -21,9 +21,16 @@ export class BookingsController {
     return this.bookingsService.getAllPayedBookings();
   }
 
+  @Get(':userID/:showID')
+  getEmailConfirmation(
+    @Param('userID') userID: string,
+    @Param('showID') showID: number,
+  ) {
+    return this.bookingsService.getEmailConfirmation(userID, showID);
+  }
+
   @Post()
   create(@Body() data: any) {
-    console.log(data);
     return this.bookingsService.create(data);
   }
 
