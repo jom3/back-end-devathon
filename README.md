@@ -29,7 +29,7 @@
 ## Installation
 
 ```bash
-$ yarn install
+$ yarn install ó npm install
 ```
 
 ## Running the app
@@ -67,6 +67,12 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## Running app
+
+- npm install 
+- docker-compose up -d
+- npm run start:dev
 
 ## License
 
