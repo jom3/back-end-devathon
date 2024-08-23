@@ -58,6 +58,7 @@ export class BookingsService {
 
   async getAllPayedBookings() {
     return this.prisma.$queryRaw`select DISTINCT "User"."fullName", 
+
     "Booking"."bookingID",
     "Booking"."numberOfSeat" as "nbutaca", 
     "Booking"."status" as "estado",
@@ -80,6 +81,7 @@ export class BookingsService {
     "Booking"."bookingID",
     "Booking"."numberOfSeat" as "nbutaca", 
     "Show"."showID",
+
     "Booking"."status" as "estado",
     "Payment"."amount" as "monto", 
     "Movie"."title", 
@@ -91,7 +93,6 @@ export class BookingsService {
  inner join "ShowSeat" on "ShowSeat"."bookingID" = "Booking"."bookingID"
  inner join "Show" on "ShowSeat"."showID" = "Show"."showID"
  inner join "Movie" on "Movie"."movieID" = "Show"."movieID"
-where "User"."id" = ${userID} 
-`;
+ where  "User"."id" = ${userID} AND "Show"."showID" = CAST(${showID} as integer)`;
   }
 }

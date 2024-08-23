@@ -16,6 +16,5 @@ export class EmailController {
   @Post()
   create(@Body() data: any) {
     return this.service.sendEmail_booking(data.email, data.fullName, data);
-    // return this.service.create(createShowDto);
   }
 }
