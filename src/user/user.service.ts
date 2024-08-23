@@ -10,12 +10,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async createUser({ password, ...createUserDto }: CreateUserDto) {
@@ -32,6 +34,9 @@ export class UserService {
       const payload = { id: user.id, role: user.role };
 
       const token = await this.jwtService.signAsync(payload);
+
+      //Sending welcome email.
+      await this.emailService.sendEmail_Welcome(user.email,user.fullName);
 
       return {
         status: 201,

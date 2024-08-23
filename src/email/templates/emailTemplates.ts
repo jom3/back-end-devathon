@@ -35,8 +35,8 @@ export const bookingTemplate = (
   const data: DataMail = {
     title: `Recibo SlowMovies`,
     userName: `Hola, ${fullName}, este es tu recibo:`,
-    info: `Su pago realizado por su reserva N°: ${booking.boodingId}, para ver ${booking.movie_title}, ha sido procesado con éxito, le recordamos que debe asistir ${booking.movie_date} a las ${booking.start_hour}, recordamos que si su recibo no es el esperado, puede ponerse en contacto con nuestro equipo de soporte`,
-    buttonTitle: 'none',
+    info: `Su pago realizado por su reserva N°: ${booking.boodingId}, para ver ${booking.movie_title}, ha sido procesado con éxito, le recordamos que debe asistir ${booking.movie_date} a las ${booking.start_hour}, si su recibo no es el esperado, puede ponerse en contacto con nuestro equipo de soporte`,
+    buttonTitle: 'Descargar',
     link: `none`,
   };
 
