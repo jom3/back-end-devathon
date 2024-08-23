@@ -9,6 +9,7 @@ import { PaginationDto } from 'src/common/dtos';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class UserService {
@@ -38,7 +39,11 @@ export class UserService {
         token,
       };
     } catch (err) {
-      throw new Error(err);
+      if(err instanceof PrismaClientKnownRequestError) {
+        if(err.code === 'P2002') {
+        } 
+     }  
+     throw new InternalServerErrorException(err);
     }
   }
 
